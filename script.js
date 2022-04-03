@@ -1,138 +1,196 @@
 'use strict';
 
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// BANKIST APP
 
-const bookings = [];
-const createBooking = function(flightNum, numPassengers = 1, price = 199 * numPassengers) {
-    // ES5 Default Values
-    // numPassengers = numPassengers || 1; 
-    // price = price || 199;
-
-    const booking = {
-        flightNum,
-        numPassengers,
-        price
-    }
-    console.log(booking);
-    bookings.push(booking);
+// Data
+const account1 = {
+  owner: 'Jonas Schmedtmann',
+  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  interestRate: 1.2, // %
+  pin: 1111,
 };
 
-// createBooking("AC122");
-// createBooking("AC122", 2, 300);
-// createBooking("AC122", 10);
-// createBooking("AC122", 5);
-// createBooking("AC122", undefined, 300);
-
-// Arguments
-
-const flight = "LH234";
-const hussein = {
-    name: "Hussein Guevara",
-    passport: 985656541
+const account2 = {
+  owner: 'Jessica Davis',
+  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+  interestRate: 1.5,
+  pin: 2222,
 };
 
-const checkIn = function(flightNum, passenger) {
-    flightNum = "LH999";
-    passenger.name = "Mr." + passenger.name;
+const account3 = {
+  owner: 'Steven Thomas Williams',
+  movements: [200, -200, 340, -300, -20, 50, 400, -460],
+  interestRate: 0.7,
+  pin: 3333,
+};
 
-    if(passenger.passport === 985656541) {
-        alert("Checked In!");
+const account4 = {
+  owner: 'Sarah Smith',
+  movements: [430, 1000, 700, 50, 90],
+  interestRate: 1,
+  pin: 4444,
+};
+
+const accounts = [account1, account2, account3, account4];
+
+// Elements
+const labelWelcome = document.querySelector('.welcome');
+const labelDate = document.querySelector('.date');
+const labelBalance = document.querySelector('.balance__value');
+const labelSumIn = document.querySelector('.summary__value--in');
+const labelSumOut = document.querySelector('.summary__value--out');
+const labelSumInterest = document.querySelector('.summary__value--interest');
+const labelTimer = document.querySelector('.timer');
+
+const containerApp = document.querySelector('.app');
+const containerMovements = document.querySelector('.movements');
+
+const btnLogin = document.querySelector('.login__btn');
+const btnTransfer = document.querySelector('.form__btn--transfer');
+const btnLoan = document.querySelector('.form__btn--loan');
+const btnClose = document.querySelector('.form__btn--close');
+const btnSort = document.querySelector('.btn--sort');
+
+const inputLoginUsername = document.querySelector('.login__input--user');
+const inputLoginPin = document.querySelector('.login__input--pin');
+const inputTransferTo = document.querySelector('.form__input--to');
+const inputTransferAmount = document.querySelector('.form__input--amount');
+const inputLoanAmount = document.querySelector('.form__input--loan-amount');
+const inputCloseUsername = document.querySelector('.form__input--user');
+const inputClosePin = document.querySelector('.form__input--pin');
+
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = "";
+
+  movements.forEach(function(mov, i) {
+    const type = mov > 0 ? "deposit" : "withdrawal";
+
+    const html = `
+      <div class="movements__row">
+        <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+        <div class="movements__value">${mov}</div>
+      </div>`;
+
+      containerMovements.insertAdjacentHTML
+      ('afterbegin', html);
+  })
+}
+displayMovements(account1.movements)
+
+
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// LECTURES
+
+
+
+
+
+/////////////////////////////////////////////////
+
+// Simple Array Methods
+// let arr = ['a', 'b', 'c', 'd', 'e'];
+
+// // SLICE
+// // console.log(arr.slice(2));
+// // console.log(arr.slice(2, 4));
+// // console.log(arr.slice(-2));
+// // console.log(arr.slice(-1));
+// // console.log(arr.slice(1, -2));
+// // console.log(arr.slice());
+// // console.log([...arr]);
+
+// // SPLICE
+// // console.log(arr.splice(2));
+// arr.splice(-1);
+// // console.log(arr);
+// arr.splice(1, 2);
+// // console.log(arr);
+
+// // REVERSE
+// arr = ['a', 'b', 'c', 'd', 'e'];
+// const arr2 = ['j', 'i', 'h', 'g', 'f'];
+// // console.log(arr2.reverse());
+// // console.log(arr2);
+
+// // CONCAT
+// const letters = arr.concat(arr2);
+// // console.log(letters);
+// // console.log([...arr, ...arr2]);
+
+// // JOIN
+// // console.log(letters.join(' - '));
+
+// // forEach() method
+
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// // for (const movement of movements) {
+//   for (const [i, movement] of movements.entries()) {
+//   if(movement > 0) {
+//     // console.log(`Movement ${i + 1}: You are withdrawing $${movement}.`)
+//   } else {
+//     // console.log(`Movement ${i + 1}: You are depositing $${Math.abs(movement)}.`)
+//   }
+// };
+
+// // forEach() 
+// movements.forEach(function(movement, index, array) { // the first argument in the function is the item in the array, second is the index, and third is the entire array
+//   if(movement > 0) {
+//     console.log(`Movement ${index + 1}: You are withdrawing $${movement}.`)
+//   } else {
+//     console.log(`Movement ${index + 1}: You are depositing $${Math.abs(movement)}.`)
+//     // with a forEach() loop, one cannot break out of the loop
+//   }
+// });
+
+
+// // forEach() with a map
+
+// const currencies = new Map([
+//   ['USD', 'United States dollar'],
+//   ['EUR', 'Euro'],
+//   ['GBP', 'Pound sterling'],
+// ]);
+
+// currencies.forEach(function(value, key) { 
+//   // console.log(`Key: ${key}`)
+//   // console.log(`Value: ${value}`)
+// })
+
+// // forEach() with a Set
+
+// const currenciesUnique = new Set(["USD", "GBP", "USD", "EUR", "EUR", "USD"]);
+// console.log(currenciesUnique);
+
+// currenciesUnique.forEach(function(value, _, map) {
+//   console.log(`${value}`)
+// })
+
+// Coding Challange #1
+
+
+
+const checkDogs = function(dogsJulia, dogsKate) {
+  const dogsJuliaCorrected = dogsJulia.slice();
+  dogsJuliaCorrected.splice(0,1);
+  dogsJuliaCorrected.splice(-2);
+  // console.log(dogsJuliaCorrected);
+  // console.log(dogsKate);
+
+  const dogs = dogsJuliaCorrected.concat(dogsKate);
+  console.log(dogs);
+
+  dogs.forEach(function(dog, i) {
+    if(dog >= 3 ){
+      console.log(`Dog number ${i + 1} is an adult, and is ${dog} years old!`)
     } else {
-        alert("Wrong Passport!");
+      console.log(`Dog number ${i + 1} is still a puppy!`)
     }
+  })
+
 };
-
-// checkIn(flight, hussein);
-// console.log(hussein);
-// console.log(flight);
-
-const newPassport = function(person) {
-    person.passport = Math.trunc(Math.random() * 1000000000)
-};
-
-// newPassport(hussein);
-// checkIn(flight, hussein);
-
-// Accepting Callback Functions
-
-const oneWord = function(str) {
-    return str.replace(/ /g, "").toLowerCase();
-};
-
-const upperFirstWord = function(str) {
-    const [first, ...others] = str.split(" ");
-    return [first.toUpperCase(), ...others].join(" ");
-};
-
-// Higher-Order Function
-const transformer = function(str, fn) {
-    // console.log(`Original String: ${str}`);
-    // console.log(`Transformed string: ${fn(str)}`);
-    // console.log(`Called by: ${fn.name}`);
-}
-
-transformer("JavaScript is the best!", upperFirstWord);
-
-const high5 = function() {
-    // console.log("Hello!")
-}
-document.body.addEventListener("click", high5);
-
-// Returning Functions
-
-const greet = function(greeting) {
-    return function(name) {
-        console.log(`${greeting} ${name}`);
-    }
-}
-
-const greeterHey = greet("Hey");
-// greeterHey("Huss");
-// greeterHey("Jazz");
-
-// Call and Apply Methods
-
-const alaska = {
-    airline: "AlasKa",
-    iateCode: "Ak",
-    bookings: [],
-    booK(flightNum, name) {
-        console.log(`${name} booked a seat on ${this.airline} flight ${this.iateCode}${flightNum}`);
-        this.bookings.push({fligth: `${this.iateCode}${flightNum}`, name});
-    }
-}
-
-alaska.booK(289, "Hussein");
-// console.log(alaska);
-
-const southWest = {
-    airline: "SouthWest",
-    iateCode: "SW",
-    bookings: [],
-}
-
-const book = alaska.booK;
-
-// The this keyword only wokrs in the object's scope; Does not work to call book method;
-// book(547, "Hussein");
-
-// Call
-book.call(alaska, 474, "Hussein"); // Use call() this target the object you want 
-console.log(alaska);
-
-book.call(southWest, 666, "Jaz");
-console.log(southWest);
-
-const swiss = {
-    airline: "Swiss Air Lines",
-    iateCode: "SAL",
-    bookings: []
-}
-
-book.call(swiss, 777, "Jose");
-console.log(swiss);
-
-// Apply Method
-
-const flightData = [781, "John Cena"]; // apply() arguments are where the this keywaord is pointing and an array
-book.apply(swiss, flightData);
-console.log(swiss);
+checkDogs([3, 5, 2, 12, 7], [4, 1, 15, 8, 3]);
+checkDogs([9, 16, 6, 8, 3], [10, 5, 6, 1, 4]);
