@@ -61,6 +61,8 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+
+// Will the displlay all transctions
 const displayMovements = function (movements) {
   containerMovements.innerHTML = "";
 
@@ -77,7 +79,28 @@ const displayMovements = function (movements) {
       ('afterbegin', html);
   })
 }
-displayMovements(account1.movements)
+displayMovements(account1.movements);
+
+// This function will add up all the values in the movements array and display on the UI
+const calcDisplayBalance = function(movements) {
+  const balance = movements.reduce((acc, cur) => acc + 
+  cur, 0);
+  labelBalance.textContent = `${balance} EUR`;
+}
+calcDisplayBalance(account1.movements);
+
+// This function will create user names for all account owners
+const createUsernames = function(accs) {
+  accs.forEach(function(acc) {
+    acc.userName = acc.owner
+      .toLowerCase()
+      .split(" ")
+      .map(name => name[0]) 
+      .join("");
+  })
+};
+createUsernames(accounts);
+
 
 
 /////////////////////////////////////////////////
@@ -192,5 +215,59 @@ const checkDogs = function(dogsJulia, dogsKate) {
   })
 
 };
-checkDogs([3, 5, 2, 12, 7], [4, 1, 15, 8, 3]);
-checkDogs([9, 16, 6, 8, 3], [10, 5, 6, 1, 4]);
+// checkDogs([3, 5, 2, 12, 7], [4, 1, 15, 8, 3]);
+// checkDogs([9, 16, 6, 8, 3], [10, 5, 6, 1, 4]);
+
+// Data Transformation with array methods
+// map()
+
+const eurToUsd = 1.1;
+
+// const movementsUSD = account1.movements.map(function(mov) { // First argument is the current item, second is the index
+//   console.log(mov * eurToUsd);
+//   return mov * eurToUsd;
+// });
+
+
+const movementsUSD = account1.movements.map(mov => mov * eurToUsd);
+
+
+const movementsDescriptions = account1.movements.map((mov, i, arr) => {
+  return `Movement ${i + 1}: You are ${mov > 0 ? "withdrawing" : 
+  "depositing"} $${Math.abs(mov)}.`
+
+  // if(mov > 0) {
+  //   return `Movement ${i + 1}: You are withdrawing $${mov}.`
+  // } else {
+  //   return `Movement ${i + 1}: You are depositing $${Math.abs(mov)}.`
+  // }
+})
+
+// console.log(movementsDescriptions);
+
+// Filther method Array.filter()
+
+const deposits = account1.movements.filter(function(mov) {
+  return mov > 0;
+})
+console.log(deposits);
+
+const withdrawals = account1.movements.filter(mov => mov < 0);
+console.log(withdrawals);
+
+// Reduce Method
+
+const balance = account1.movements.reduce(function(acc, cur, i, arr) {
+  return acc + cur
+}, 0)
+console.log(balance);
+
+// Maximum Value
+const max = account1.movements.reduce((acc, cur) => {
+  if(acc > cur) {
+    return acc;
+  } else {
+    return cur;
+  }
+}, account1.movements[0])
+console.log(max);
