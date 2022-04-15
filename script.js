@@ -63,10 +63,12 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 
 // Will the displlay all transctions
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = "";
 
-  movements.forEach(function(mov, i) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements
+
+  movs.forEach(function(mov, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
 
     const html = `
@@ -183,6 +185,61 @@ btnTransfer.addEventListener("click", function(e) {
   }
 })
 
+// Close Account Event
+btnClose.addEventListener("click", function(e) {
+  e.preventDefault()
+  console.log("Close");
+  // console.log(inputCloseUsername.value);
+  // console.log(inputClosePin.value);
+
+  const index = accounts.findIndex(acc => acc.userName === currentAccount.userName);
+  console.log(index);
+
+  if(inputCloseUsername.value === currentAccount.userName &&
+    Number(inputClosePin.value) === currentAccount.pin) {
+      // Close Account
+      accounts.splice(index, 1);
+      console.log(accounts);
+
+      // Hide UI
+      containerApp.style.opacity = 0; 
+    }
+    inputClosePin.blur();   
+    inputCloseUsername.value = "";
+    inputClosePin.value = "";
+  
+})
+
+// Get Loan
+btnLoan.addEventListener("click", function(e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  console.log(amount);
+
+  if(amount > 0 && currentAccount.movements.some(mov => mov >= amount * .1)) {
+    // Push Amount Into Movements Array
+    currentAccount.movements.push(amount);
+
+    // Clear Inputs
+    inputLoanAmount.value = "";
+    inputLoanAmount.blur();
+
+    // Update UI
+    updateUI(currentAccount);
+
+  }
+})
+
+// Sort Movements
+
+let sorted = false;
+btnSort.addEventListener("click", function(e) {
+  e.preventDefault();
+  // console.log("Hello");
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+})
+
 
 
 /////////////////////////////////////////////////
@@ -196,7 +253,7 @@ btnTransfer.addEventListener("click", function(e) {
 /////////////////////////////////////////////////
 
 // Simple Array Methods
-// let arr = ['a', 'b', 'c', 'd', 'e'];
+let arr = ['a', 'b', 'c', 'd', 'e'];
 
 // // SLICE
 // // console.log(arr.slice(2));
@@ -207,12 +264,12 @@ btnTransfer.addEventListener("click", function(e) {
 // // console.log(arr.slice());
 // // console.log([...arr]);
 
-// // SPLICE
-// // console.log(arr.splice(2));
-// arr.splice(-1);
-// // console.log(arr);
-// arr.splice(1, 2);
-// // console.log(arr);
+// SPLICE
+console.log(arr.splice(2));
+arr.splice(-1);
+console.log(arr);
+arr.splice(1, 2);
+console.log(arr);
 
 // // REVERSE
 // arr = ['a', 'b', 'c', 'd', 'e'];
@@ -400,4 +457,102 @@ const firstWithdrawal = account1.movements.find(mov => mov < 0);
 // console.log(accounts);
 
 const account = accounts.find(acc => acc.owner === "Jonas Schmedtmann");
-console.log(account);
+// console.log(account);
+
+// Some and Every Methods
+
+// Includes checks to see if that element exist, it checks for  equality 
+// console.log(account1.movements.includes(-130));
+
+const anyDeposits = account1.movements.some(mov => mov > 1500);
+// console.log(anyDeposits);
+
+// Every Method. Checks to see if every element satisfies the conditon
+
+// console.log(account1.movements.every(mov => mov > 0));
+// console.log(account2.movements.every(mov => mov > 0));
+// console.log(account3.movements.every(mov => mov > 0));
+// console.log(account4.movements.every(mov => mov > 0));
+
+// Seperate Callbacks 
+const deposit = mov => mov > 0;
+
+// console.log(account1.movements.some(deposit))
+// console.log(account1.movements.filter(deposit))
+// console.log(account1.movements.every(deposit))
+
+// Flat Method
+const nestedArr = [[1, 2, 3], [4, 5, 6], 7, 8];
+// console.log(nestedArr.flat());
+
+const deepArr = [[[1, 2], 3], [4, [5, 6], 7]];
+// console.log(deepArr.flat(2)); // The argument in the .flat(2) is the number of levels the function can go
+
+const accountMovements = accounts.map(acc => acc.movements);
+// console.log(accountMovements);
+const allMovements = accountMovements.flat();
+// console.log(allMovements);
+
+const overalBalance = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((acc, cur) => acc + cur, 0);
+// console.log(overalBalance);
+
+// Flat Map
+const overalBalance2 = accounts
+  .flatMap(acc => acc.movements) // The flatMap() cmethod can only go one level deep.
+  .reduce((acc, cur) => acc + cur, 0);
+// console.log(overalBalance2);
+
+// Sort()
+
+const owners = ["Harold", "Brianna", "Andrea", "Charlie"];
+// console.log(owners.sort());
+
+// console.log(account1.movements.sort());
+
+// return < 0, A, B
+// return > 0, B, A
+
+// Ascending Order
+account1.movements.sort((a, b) => { // The sort() method mutates the string, so use with caution;
+  if(a > b) {
+    return 1
+  }
+  if(b > a) {
+    return -1
+  }
+})
+// console.log(account1.movements)
+
+// Descending Order
+account1.movements.sort((a, b) => {
+  if(a > b) {
+    return -1  
+  }
+  if(b > a) {
+    return 1
+  }
+})
+// console.log(account1.movements)
+
+// Fill Method
+
+const arr2 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+const x = new Array(7);
+// console.log(x);
+// x.fill(1);
+// console.log(x);
+// x.fill(1, 4);
+// console.log(x);
+x.fill(9, 2, x.length-1); // The arguments are first: the item the item that will fill the array, second: what index to start at; third: what index to end
+console.log(x);
+
+// From Method
+const y = Array.from({length: 10}, () => 1);
+console.log(y);
+
+const z = Array.from({length: 10}, (cur, i) => i + 10);
+console.log(z);
